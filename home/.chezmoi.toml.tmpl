@@ -1,0 +1,6 @@
+{{- /* Per-machine chezmoi config, rendered by `chezmoi init`. */ -}}
+{{- if ne .chezmoi.os "windows" }}
+# Symlink plain files into the source directory, so editing ~/.config/... edits
+# the repository directly. Windows gets copies instead.
+mode = "symlink"
+{{- end }}

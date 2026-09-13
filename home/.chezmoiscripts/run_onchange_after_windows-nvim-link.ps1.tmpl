@@ -1,0 +1,14 @@
+{{- if eq .chezmoi.os "windows" -}}
+# Neovim on Windows reads %LOCALAPPDATA%\nvim. Link it to the shared
+# ~/.config/nvim so every OS runs the same configuration from this repository.
+$ErrorActionPreference = 'Stop'
+$target = Join-Path $HOME '.config\nvim'
+$link = Join-Path $env:LOCALAPPDATA 'nvim'
+$item = Get-Item -LiteralPath $link -Force -ErrorAction SilentlyContinue
+if ($item -and $item.LinkType -eq 'Junction' -and (@($item.Target)[0] -eq $target)) { return }
+if ($item) {
+    throw "$link already exists. Back it up, remove it, then run 'chezmoi apply' again."
+}
+New-Item -ItemType Junction -Path $link -Target $target | Out-Null
+Write-Host "Linked $link -> $target"
+{{ end -}}
