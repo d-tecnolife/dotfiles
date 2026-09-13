@@ -3,4 +3,8 @@
 # Symlink plain files into the source directory, so editing ~/.config/... edits
 # the repository directly. Windows gets copies instead.
 mode = "symlink"
+# chezmoi otherwise assumes umask 022. Ubuntu gives users with a same-named
+# group umask 002 in SSH and desktop sessions, so every directory chezmoi
+# created would show as a mode change in `chezmoi status` and `verify`.
+umask = 0o{{ output "sh" "-c" "umask" | trim | trimPrefix "0" }}
 {{- end }}
